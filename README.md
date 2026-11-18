@@ -7,7 +7,7 @@ Application **indépendante** du Blind Test V2. Aucun changement n'est nécessai
 - **Mac (écran principal)** : tableau de bord privé avec commandes de lecture, réglage du bandeau et bascule vers le jeu.
 - **TV (deuxième écran en HDMI, mode bureau étendu)** : diaporama MP4 en boucle et bandeau défilant en haut.
 - Le bandeau peut être modifié et activé/désactivé à tout moment, sans interrompre la vidéo.
-- **Passage au Blind Test V2** : l'animateur saisit le lien d'affichage TV et son lien animateur, puis clique sur « Passer au Blind Test ». Le navigateur TV navigue vers le jeu et le Mac ouvre l'interface animateur dans un nouvel onglet.
+- **Passage au Blind Test V2** : les deux liens fournis sont préconfigurés. Le bouton « Passer au Blind Test » affiche la page publique du jeu sur la TV et ouvre l'interface animateur sur le Mac. **Attention : la page publique/joueur n'est pas la fenêtre vidéo TV du Blind Test** ; cette dernière doit être ouverte depuis l'interface animateur pour disposer de la session et du jeton TV.
 
 ## Installation sur Render (en ligne)
 
@@ -25,7 +25,7 @@ La première connexion du service Render gratuit peut prendre un moment après u
 2. Placer le navigateur de la TV sur le deuxième écran.
 3. Sur la page TV, sélectionner le fichier **MP4 local** et cliquer **Démarrer le diaporama**, puis **Plein écran**. La vidéo reste locale, sans upload sur Render/GitHub.
 4. Garder la page de régie sur l'écran du Mac. Le bandeau et les commandes sont synchronisés en temps réel.
-5. Au lancement du Blind Test, renseigner les **deux URL exactes** dans la régie ; vérifier que les pages du Blind Test fonctionnent, puis cliquer sur le bouton de bascule.
+5. Au lancement du Blind Test, cliquer sur le bouton de bascule : les deux liens fournis sont déjà renseignés. Pour afficher le lecteur vidéo TV du jeu, utiliser ensuite la commande **Ouvrir la fenêtre vidéo** dans l'interface animateur et déplacer cette fenêtre sur la TV.
 
 ⚠️ **Limites importantes :**
 
@@ -35,7 +35,7 @@ La première connexion du service Render gratuit peut prendre un moment après u
 - Une fois passée au Blind Test, la page TV n'est plus reliée à la régie. Pour revenir à l'accueil, rouvrir `/tv.html` et recharger le MP4.
 - L'application n'intègre pas encore un système d'authentification propre à l'écran TV : le lien TV doit être partagé uniquement avec l'équipe régie. Le code animateur protège les commandes, pas l'accès à l'image TV.
 - Les réglages du bandeau ne sont conservés qu'en mémoire : un redémarrage du service restaure les valeurs par défaut.
-- Les liens de bascule sont saisis au dernier moment ; ils ne sont ni stockés sur disque ni publiés dans GitHub. Le lien TV est transmis au serveur pour la commande de bascule.
+- Les deux URL fournies (page publique et interface animateur) sont publiées dans le code. Elles ne contiennent pas de jeton de session. Les URL TV avec jeton doivent rester privées et ne sont pas intégrées à la régie.
 
 ## Exécution locale
 
