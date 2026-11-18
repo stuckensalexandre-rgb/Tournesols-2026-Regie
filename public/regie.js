@@ -34,9 +34,9 @@
     const value = $('tv-url').value.trim();
     try { if (isTvUrl(value)) localStorage.setItem(tvStorageKey, value); else localStorage.removeItem(tvStorageKey); } catch {}
     updateTvLinkStatus();
-  if (videoChannel) videoChannel.postMessage({ type: 'regie-ready' });
   });
   updateTvLinkStatus();
+  if (videoChannel) videoChannel.postMessage({ type: 'regie-ready' });
   socket.on('connect', () => { $('connection-label').textContent = 'Serveur connecté'; $('connection-dot').classList.add('online'); if (authorized) $('login-error').textContent = 'Connexion rétablie : saisissez à nouveau le code.'; authorized = false; $('locked').hidden = false; $('controls').hidden = true; });
   socket.on('disconnect', () => { $('connection-label').textContent = 'Hors connexion'; $('connection-dot').classList.remove('online'); });
   $('login-form').addEventListener('submit', e => {
@@ -67,7 +67,7 @@
   $('switch-game').addEventListener('click', () => {
     const tv = $('tv-url').value.trim(), host = $('host-url').value.trim();
     function valid(value) { try { return ['https:', 'http:'].includes(new URL(value).protocol); } catch { return false; } }
-    if (!isTvUrl(tv) || !valid(host)) { $('handoff-status').textContent = 'Indiquez le lien exact de la fenêtre TV du Blind Test, avec son code et son token.'; return; }
+    if (!isTvUrl(tv) || !valid(host)) { $('handoff-status').textContent = 'Le lien TV de session n’est pas encore enregistré ici. Collez une fois le lien complet reçu depuis le Blind Test (code et token), puis réessayez.'; $('tv-url').focus(); return; }
     if (!confirm('Passer la télévision au Blind Test V2 et ouvrir l’interface animateur sur le Mac ?')) return;
     const windowRef = window.open(host, '_blank');
     socket.emit('switch-to-blindtest', tv);
