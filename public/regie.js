@@ -2,6 +2,21 @@
   const socket = io();
   const $ = id => document.getElementById(id);
   let authorized = false;
+  const tvStorageKey = 'tournesols-regie-tv-session-url';
+  try { $('tv-url').value = localStorage.getItem(tvStorageKey) || ''; } catch {}
+  function isTvUrl(value) {
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && url.origin === 'https://gala-tournesols-2026-v2.onrender.com' && url.pathname === '/tv.html' && Boolean(url.searchParams.get('code')) && Boolean(url.searchParams.get('token'));
+    } catch { return false; }
+  }
+  function updateTvLinkStatus() { $('tv-link-status').textContent = isTvUrl($('tv-url').value.trim()) ? 'Lien de session TV prêt sur cet appareil.' : 'Saisissez le lien complet de la fenêtre TV, avec code et token.'; }
+  $('tv-url').addEventListener('input', () => {
+    const value = $('tv-url').value.trim();
+    try { if (isTvUrl(value)) localStorage.setItem(tvStorageKey, value); else localStorage.removeItem(tvStorageKey); } catch {}
+    updateTvLinkStatus();
+  });
+  updateTvLinkStatus();
   socket.on('connect', () => { $('connection-label').textContent = 'Serveur connecté'; $('connection-dot').classList.add('online'); if (authorized) $('login-error').textContent = 'Connexion rétablie : saisissez à nouveau le code.'; authorized = false; $('locked').hidden = false; $('controls').hidden = true; });
   socket.on('disconnect', () => { $('connection-label').textContent = 'Hors connexion'; $('connection-dot').classList.remove('online'); });
   $('login-form').addEventListener('submit', e => {
@@ -31,7 +46,7 @@
   $('switch-game').addEventListener('click', () => {
     const tv = $('tv-url').value.trim(), host = $('host-url').value.trim();
     function valid(value) { try { return ['https:', 'http:'].includes(new URL(value).protocol); } catch { return false; } }
-    if (!valid(tv) || !valid(host)) { $('handoff-status').textContent = 'Indiquez deux liens complets commençant par https://'; return; }
+    if (!isTvUrl(tv) || !valid(host)) { $('handoff-status').textContent = 'Indiquez le lien exact de la fenêtre TV du Blind Test, avec son code et son token.'; return; }
     if (!confirm('Passer la télévision au Blind Test V2 et ouvrir l’interface animateur sur le Mac ?')) return;
     const windowRef = window.open(host, '_blank');
     socket.emit('switch-to-blindtest', tv);
