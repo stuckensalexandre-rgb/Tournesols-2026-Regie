@@ -63,7 +63,7 @@
   function applyTicker() { socket.emit('ticker', { text: $('ticker-text').value, visible: $('ticker-visible').checked, speed: Number($('ticker-speed').value) }); }
   $('ticker-apply').addEventListener('click', applyTicker);
   $('ticker-visible').addEventListener('change', applyTicker);
-  for (const id of ['play', 'pause', 'restart', 'mute']) $(id).addEventListener('click', () => socket.emit('video-command', id));
+  for (const id of ['play', 'pause', 'restart', 'mute', 'unmute']) $(id).addEventListener('click', () => socket.emit('video-command', id));
   $('switch-game').addEventListener('click', () => {
     const tv = $('tv-url').value.trim(), host = $('host-url').value.trim();
     function valid(value) { try { return ['https:', 'http:'].includes(new URL(value).protocol); } catch { return false; } }
