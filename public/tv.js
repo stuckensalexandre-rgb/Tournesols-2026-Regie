@@ -3,6 +3,22 @@
   const $ = id => document.getElementById(id);
   const video = $('slideshow');
   let objectUrl;
+  // Muted playback is permitted by browser autoplay policies in more situations.
+  video.muted = true;
+  video.autoplay = true;
+  let playbackRequested = false;
+  async function attemptPlayback() {
+    if (!video.src) return;
+    try {
+      await video.play();
+      $('standby').hidden = true;
+      $('tv-setup').classList.add('collapsed');
+      status();
+    } catch (error) {
+      $('tv-setup').classList.remove('collapsed');
+      socket.emit('tv-playback-error', error?.name || 'PlaybackError');
+    }
+  }
   const videoChannel = 'BroadcastChannel' in window ? new BroadcastChannel('tournesols-regie-video-v1') : null;
   function loadVideo(file) {
     if (!file || !(file instanceof Blob)) return;
@@ -14,6 +30,8 @@
     $('tv-start').disabled = false;
     $('standby').hidden = false;
     status();
+    // Start muted as soon as the file arrives, avoiding a click on the TV.
+    attemptPlayback();
   }
   if (videoChannel) {
     videoChannel.onmessage = event => {
@@ -33,10 +51,7 @@
     const file = $('video-file').files?.[0]; if (!file) return;
     loadVideo(file);
   });
-  function start() {
-    if (!video.src) return;
-    video.play().then(() => { $('standby').hidden = true; $('tv-setup').classList.add('collapsed'); status(); }).catch(() => { $('tv-setup').classList.remove('collapsed'); });
-  }
+  function start() { playbackRequested = true; attemptPlayback(); }
   $('tv-start').addEventListener('click', start);
   $('tv-fullscreen').addEventListener('click', () => document.documentElement.requestFullscreen?.().catch(() => {}));
   $('tv-hide').addEventListener('click', () => $('tv-setup').classList.add('collapsed'));
