@@ -27,6 +27,7 @@ const state = {
   tickerSpeed: 24,
   playing: false,
   videoLoaded: false,
+  loop: true,
   tvConnected: false,
   screen: 'accueil'
 };
@@ -47,7 +48,7 @@ io.on('connection', socket => {
     socket.join('tv');
     state.tvConnected = true;
     announce();
-    socket.emit('tv-settings', { ticker: state.ticker, tickerVisible: state.tickerVisible, tickerSpeed: state.tickerSpeed });
+    socket.emit('tv-settings', { ticker: state.ticker, tickerVisible: state.tickerVisible, tickerSpeed: state.tickerSpeed, loop: state.loop });
   });
   socket.on('login', (candidate, callback) => {
     const valid = sameSecret(candidate, pin);
@@ -61,6 +62,12 @@ io.on('connection', socket => {
     state.tickerVisible = Boolean(payload.visible);
     state.tickerSpeed = Math.max(12, Math.min(70, Number(payload.speed) || 24));
     io.to('tv').emit('tv-settings', { ticker: state.ticker, tickerVisible: state.tickerVisible, tickerSpeed: state.tickerSpeed });
+    announce();
+  });
+  socket.on('set-loop', enabled => {
+    if (role !== 'admin') return;
+    state.loop = Boolean(enabled);
+    io.to('tv').emit('set-loop', state.loop);
     announce();
   });
   socket.on('video-command', command => {
