@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: tournesols-2026-regie
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: ADMIN_PIN
+        sync: false
