@@ -8,7 +8,7 @@ const { timingSafeEqual } = require('node:crypto');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-const pin = process.env.ADMIN_PIN || (process.env.NODE_ENV === 'production' ? '' : 'demo-local-2026');
+const pin = process.env.ADMIN_PIN || (process.env.NODE_ENV === 'test' ? 'test-only-secret-2026' : '');
 if (!pin || pin.length < 10) {
   console.error('Définir ADMIN_PIN (au moins 10 caractères) dans les variables d’environnement.');
   process.exit(1);
